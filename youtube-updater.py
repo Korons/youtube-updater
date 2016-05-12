@@ -3,6 +3,7 @@
 import os
 import sys
 import feedparser
+import youtube_dl
 
 home = os.getenv("HOME")
 path = '{0}/Videos'.format(home)
@@ -11,6 +12,15 @@ downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
 
 pid = str(os.getpid())
 pidfile = "/tmp/youtube_updater.pid"
+
+# Youtube-dl options
+
+ydl_opts = {
+    'format':'22',
+    'writedescription':'True',
+    'writethumbnail':'True',
+    'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path)
+    }
 
 if os.path.isfile(pidfile):
     print ("{0} already exists, exiting".format(pidfile))
@@ -31,12 +41,14 @@ for channel in youtube_channels:
         try:
             url = feed.entries[num].link
             if url not in open(downloaded).read():
-                w_thumb = '--write-thumbnail'
-                w_descript = '--write-description'
                 # This does a system call for youtube-dl.
                 # TODO change from system call to youtube-dl lib
-                youtube_dl_call = ('youtube-dl -i -w -o "{0}/%(uploader)s/%(title)s.%(ext)s" "{1}" -f 22 {2} {3} -R 10'.format(path, url, w_thumb, w_descript))
-                os.system(youtube_dl_call)
+                print (url)
+                try:
+                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                        ydl.download([url])
+                except:
+                    pass
                 with open(downloaded, mode='a') as f:
                     f.write(url + '\n')
         # We break if the channel has less than 10 videos
