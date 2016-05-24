@@ -26,6 +26,12 @@ if os.path.isfile(pidfile):
     print ("{0} already exists, exiting".format(pidfile))
     sys.exit()
 
+def download(opts, url):
+    with youtube_dl.YoutubeDL(opts) as ydl:
+        ydl.download([url])
+    with open(downloaded, mode='a') as f:
+        f.write(url + '\n')
+
 with open(channels) as f:
     youtube_channels = f.read().splitlines()
 # We write the pid to file so we can tell if the program is running/has crashed
@@ -42,15 +48,23 @@ for channel in youtube_channels:
             url = feed.entries[num].link
             if url not in open(downloaded).read():
                 # This does a system call for youtube-dl.
-                # TODO change from system call to youtube-dl lib
                 print (url)
                 try:
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        ydl.download([url])
-                except:
+                    download(ydl_opts, url)
+                # This expect is here to catch any format errors from youtube
+                except KeyError:
                     pass
-                with open(downloaded, mode='a') as f:
-                    f.write(url + '\n')
+                except youtube_dl.utils.DownloadError:
+                    try:
+                        ydl_opts = {
+                            'format':'18',
+                            'writedescription':'True',
+                            'writethumbnail':'True',
+                            'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path)
+                            }
+                        download(ydl_opts, url)
+                    except youtube_dl.utils.DownloadError:
+                        pass
         # We break if the channel has less than 10 videos
         except IndexError:
             break
