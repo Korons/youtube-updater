@@ -57,7 +57,7 @@ for channel in youtube_channels:
                 except youtube_dl.utils.DownloadError:
                     try:
                         ydl_opts = {
-                            'format':'18',
+                            'format': 'bestaudio/best',
                             'writedescription':'True',
                             'writethumbnail':'True',
                             'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path)
@@ -70,5 +70,6 @@ for channel in youtube_channels:
             break
         else:
             print('Already downloaded')
+
 # We remove the pid file
 os.unlink(pidfile)
