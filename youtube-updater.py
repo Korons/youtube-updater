@@ -13,18 +13,37 @@ downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
 pid = str(os.getpid())
 pidfile = "/tmp/youtube_updater.pid"
 
+def pid_exists(pid):
+    try:
+        os.kill(int(pid), 0)
+        return False
+    except OSError:
+        return True
+
 # Youtube-dl options
 
 ydl_opts = {
     'format':'22',
     'writedescription':'True',
     'writethumbnail':'True',
-    'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path)
+    'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
+    'writedescription':'True',
+    'writeinfojson':'True',
+    'writeannotations':'True',
+    'writesub':'True'
+
     }
 
 if os.path.isfile(pidfile):
-    print ("{0} already exists, exiting".format(pidfile))
-    sys.exit()
+    if pid_exists(open(pidfile).read()) == True:
+        print("Found stale lockfile, removing")
+        os.unlink(pidfile)
+    elif pid_exists(open(pidfile).read()) == False:
+        print ("{0} already exists, exiting".format(pidfile))
+        sys.exit()
+    else:
+        print('Something went wrong')
+        sys.exit()
 
 def download(opts, url):
     with youtube_dl.YoutubeDL(opts) as ydl:
@@ -47,20 +66,23 @@ for channel in youtube_channels:
         try:
             url = feed.entries[num].link
             if url not in open(downloaded).read():
-                # This does a system call for youtube-dl.
                 print (url)
                 try:
                     download(ydl_opts, url)
-                # This expect is here to catch any format errors from youtube
+                # This expect is any key error what might be thrown from the video no longer existing
                 except KeyError:
                     pass
                 except youtube_dl.utils.DownloadError:
                     try:
                         ydl_opts = {
-                            'format': 'bestaudio/best',
+                            'format': 'bestvideo+bestaudio/best',
                             'writedescription':'True',
                             'writethumbnail':'True',
-                            'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path)
+                            'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
+                            'writedescription':'True',
+                            'writeinfojson':'True',
+                            'writeannotations':'True',
+                            'writesub':'True'
                             }
                         download(ydl_opts, url)
                     except youtube_dl.utils.DownloadError:
