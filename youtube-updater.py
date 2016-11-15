@@ -42,7 +42,7 @@ if os.path.isfile(pidfile):
         print ("{0} already exists, exiting".format(pidfile))
         sys.exit()
     else:
-        print('Something went wrong')
+        print('Error writing lockfile')
         sys.exit()
 
 def download(opts, url):
