@@ -13,6 +13,7 @@ downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
 pid = str(os.getpid())
 pidfile = "/tmp/youtube_updater.pid"
 
+
 def pid_exists(pid):
     try:
         os.kill(int(pid), 0)
@@ -23,14 +24,14 @@ def pid_exists(pid):
 # Youtube-dl options
 
 ydl_opts = {
-    'format':'22',
-    'writedescription':'True',
-    'writethumbnail':'True',
-    'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
-    'writedescription':'True',
-    'writeinfojson':'True',
-    'writeannotations':'True',
-    'writesub':'True'
+    'format': '22',
+    'writedescription': 'True',
+    'writethumbnail': 'True',
+    'outtmpl': "{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
+    'writedescription': 'True',
+    'writeinfojson': 'True',
+    'writeannotations': 'True',
+    'writesub': 'True'
 
     }
 
@@ -76,13 +77,13 @@ for channel in youtube_channels:
                     try:
                         ydl_opts = {
                             'format': 'bestvideo+bestaudio/best',
-                            'writedescription':'True',
-                            'writethumbnail':'True',
-                            'outtmpl':"{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
-                            'writedescription':'True',
-                            'writeinfojson':'True',
-                            'writeannotations':'True',
-                            'writesub':'True'
+                            'writedescription': 'True',
+                            'writethumbnail': 'True',
+                            'outtmpl': "{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
+                            'writedescription': 'True',
+                            'writeinfojson': 'True',
+                            'writeannotations': 'True',
+                            'writesub': 'True'
                             }
                         download(ydl_opts, url)
                     except youtube_dl.utils.DownloadError:
