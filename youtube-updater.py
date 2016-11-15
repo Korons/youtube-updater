@@ -39,7 +39,7 @@ if os.path.isfile(pidfile):
         print("Found stale lockfile, removing")
         os.unlink(pidfile)
     elif pid_exists(open(pidfile).read()) == False:
-        print ("{0} already exists, exiting".format(pidfile))
+        print("{0} already exists, exiting".format(pidfile))
         sys.exit()
     else:
         print('Error writing lockfile')
@@ -60,13 +60,13 @@ with open(pidfile, mode='w') as f:
 for channel in youtube_channels:
     feed = feedparser.parse(channel)
     # This prints the name of the channel
-    print (feed[ "channel" ][ "title" ])
+    print(feed[ "channel" ][ "title" ])
     # The range is the number of videos we check
     for num in range(0,10):
         try:
             url = feed.entries[num].link
             if url not in open(downloaded).read():
-                print (url)
+                print(url)
                 try:
                     download(ydl_opts, url)
                 # This expect is any key error what might be thrown from the video no longer existing
