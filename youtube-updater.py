@@ -87,6 +87,7 @@ for channel in youtube_channels:
                             }
                         download(ydl_opts, url)
                     except youtube_dl.utils.DownloadError:
+                        print("Unable to download {0}".format(url))
                         pass
         # We break if the channel has less than 10 videos
         except IndexError:
