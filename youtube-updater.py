@@ -18,6 +18,7 @@ if home == None:
     home = os.path.dirname(os.path.realpath(__file__))
     os.makedirs(path, exist_ok=True)
     os.makedirs('{0}/.config/youtube-updater/'.format(home), exist_ok=True)
+    path = '{0}/Videos'.format(home)
     channels = '{0}/.config/youtube-updater/channels.txt'.format(home)
     downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
 
