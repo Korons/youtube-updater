@@ -25,6 +25,8 @@ if home == None:
 # We check if we're on windows
 if os.name == 'nt':
     windows = True
+else:
+    windows = False
 
 pid = str(os.getpid())
 
@@ -38,6 +40,7 @@ else:
 
 def pid_exists(pid):
     if windows == True:
+        print("Running on windows")
         pass
     else:
         try:
