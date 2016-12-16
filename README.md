@@ -28,11 +28,11 @@ To add a channel open `~/.config/youtube-updater/channels.txt` with a text edito
 
 You need feedparser which can be installed with
 
-`sudo pip3 install feedparser`
+`pip3 install feedparser`
 
 And youtube-dl which can be installed with
 
-`sudo pip3 install youtube-dl`
+`pip3 install youtube-dl`
 
 ## Usage
 
