@@ -10,16 +10,40 @@ path = '{0}/Videos'.format(home)
 channels = '{0}/.config/youtube-updater/channels.txt'.format(home)
 downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
 
+# We check if $HOME is set on the system
+
+if home == None:
+    print("$HOME is not set on this system")
+    print("Using install dir as home")
+    home = os.path.dirname(os.path.realpath(__file__))
+    os.makedirs(path, exist_ok=True)
+    os.makedirs('{0}/.config/youtube-updater/'.format(home), exist_ok=True)
+    channels = '{0}/.config/youtube-updater/channels.txt'.format(home)
+    downloaded = '{0}/.config/youtube-updater/downloaded.txt'.format(home)
+
+# We check if we're on windows
+if os.name == 'nt':
+    windows = True
+
 pid = str(os.getpid())
-pidfile = "/tmp/youtube_updater.pid"
+
+# If home isn't set then we are likely on windows/ a non-unix like OS
+# so we change the /tmp path to the install dir
+if home == None:
+    pidfile = "{0}/youtube_updater.pid".format(home)
+else:
+    pidfile = "/tmp/youtube_updater.pid"
 
 
 def pid_exists(pid):
-    try:
-        os.kill(int(pid), 0)
-        return False
-    except OSError:
-        return True
+    if windows == True:
+        pass
+    else:
+        try:
+            os.kill(int(pid), 0)
+            return False
+        except OSError:
+            return True
 
 # Youtube-dl options
 
