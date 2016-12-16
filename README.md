@@ -16,6 +16,8 @@ Make a folder inside the folder where you downloaded this script named .config/y
 
 inside `youtube-updater/.config/youtube-updater/` make 2 text files with the names `downloaded.txt` and `channels.txt`
 
+Inside of `youtube-updater` make a folder called Videos
+
 ## Configuration
 
 The default path for the Configuration files are `~/.config/youtube-updater/channels.txt` and `~/.config/youtube-updater/downloaded.txt`.
