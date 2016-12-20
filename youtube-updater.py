@@ -52,14 +52,15 @@ def pid_exists(pid):
 # Youtube-dl options
 
 ydl_opts = {
-    'format': '22',
+    'format': '22', # This is 720 mp4
     'writedescription': 'True',
     'writethumbnail': 'True',
     'outtmpl': "{0}/%(uploader)s/%(title)s.%(ext)s".format(path),
     'writedescription': 'True',
     'writeinfojson': 'True',
     'writeannotations': 'True',
-    'writesub': 'True'
+    'writesub': 'True',
+    'allsubs': 'True'
 
     }
 
@@ -112,6 +113,8 @@ for channel in youtube_channels:
                             'writeinfojson': 'True',
                             'writeannotations': 'True',
                             'writesub': 'True'
+                            'allsubs': 'True'
+
                             }
                         download(ydl_opts, url)
                     except youtube_dl.utils.DownloadError:
