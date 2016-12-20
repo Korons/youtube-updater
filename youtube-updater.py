@@ -112,7 +112,7 @@ for channel in youtube_channels:
                             'writedescription': 'True',
                             'writeinfojson': 'True',
                             'writeannotations': 'True',
-                            'writesub': 'True'
+                            'writesub': 'True',
                             'allsubs': 'True'
 
                             }
