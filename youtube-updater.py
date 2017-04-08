@@ -4,6 +4,11 @@ import os
 import sys
 import feedparser
 import youtube_dl
+import argparse
+
+parser = argparse.ArgumentParser(description='Download youtube videos')
+parser.add_argument("-l", help="Log video titles to file", nargs='?')
+args = parser.parse_args()
 
 home = os.getenv("HOME")
 path = '{0}/Videos'.format(home)
@@ -32,7 +37,7 @@ pid = str(os.getpid())
 
 # If home isn't set then we are likely on windows/ a non-unix like OS
 # so we change the /tmp path to the install dir
-if home == None:
+if windows == True:
     pidfile = "{0}/youtube_updater.pid".format(home)
 else:
     pidfile = "/tmp/youtube_updater.pid"
@@ -75,11 +80,16 @@ if os.path.isfile(pidfile):
         print('Error writing lockfile')
         sys.exit()
 
-def download(opts, url):
+def download(video_title, opts, url):
+    if args.l:
+        if video_title not in open(args.l).read():
+            with open(args.l, mode='a') as f:
+                f.write(video_title + '\n')
     with youtube_dl.YoutubeDL(opts) as ydl:
         ydl.download([url])
     with open(downloaded, mode='a') as f:
         f.write(url + '\n')
+
 
 with open(channels) as f:
     youtube_channels = f.read().splitlines()
@@ -90,7 +100,10 @@ with open(pidfile, mode='w') as f:
 for channel in youtube_channels:
     feed = feedparser.parse(channel)
     # This prints the name of the channel
-    print(feed[ "channel" ][ "title" ])
+    try:
+        print(feed[ "channel" ][ "title" ])
+    except KeyError:
+        print("Unable to get channel title")
     # The range is the number of videos we check
     for num in range(0,10):
         try:
@@ -98,7 +111,7 @@ for channel in youtube_channels:
             if url not in open(downloaded).read():
                 print(url)
                 try:
-                    download(ydl_opts, url)
+                    download(feed.entries[num].title, ydl_opts, url)
                 # This expect is any key error what might be thrown from the video no longer existing
                 except KeyError:
                     pass
@@ -116,7 +129,7 @@ for channel in youtube_channels:
                             'allsubs': 'True'
 
                             }
-                        download(ydl_opts, url)
+                        download(feed.entries[num].title, ydl_opts, url)
                     except youtube_dl.utils.DownloadError:
                         print("Unable to download {0}".format(url))
                         pass
